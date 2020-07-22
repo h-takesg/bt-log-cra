@@ -1,0 +1,49 @@
+.HistoryCard {
+  width: 85%;
+  max-width: 800px;
+  background-color: #eee;
+  border-radius: 5px;
+  flex: 1 0 1px;
+  margin: 5px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  font-size: 3rem;
+}
+
+.HistoryColumn{
+  align-items: center;
+  font-size: 0.4em;
+  height: 2.3rem;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  padding: 2px 5px;
+  box-sizing: border-box;
+}
+
+.HistoryDate{
+  flex: 0 0 15%;
+  margin-right: 10px;
+}
+
+.HistoryBt-data{
+  flex: 0 0 15%;
+  margin-right: 10px;
+}
+
+.HistoryCondition{
+  flex: 0 1 40%;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.HistoryTime{
+  flex:0 0 30%;
+  font-size: 0.4em;
+  color: #333;
+}
+
+.space{
+  height: 2.3rem;
+}

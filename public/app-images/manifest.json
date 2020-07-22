@@ -1,6 +1,10 @@
 {
-  "short_name": "bt-log",
   "name": "bt-log",
+  "theme_color": "#2196f3",
+  "background_color": "#2196f3",
+  "display": "browser",
+  "Scope": "/",
+  "start_url": "/",
   "icons": [
     {
       "src": "images/icons/icon-72x72.png",
@@ -43,8 +47,5 @@
       "type": "image/png"
     }
   ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "splash_pages": null
 }

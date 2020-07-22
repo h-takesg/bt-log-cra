@@ -1,0 +1,137 @@
+.SettingPopup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgba(0,0,0, 0.5);
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.SettingPopupInner {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 15%;
+  bottom: 45%;
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0px 2px 10px #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.SettingPopupTitle{
+  width: 80%;
+  margin-top:5%;
+  font-size: 2rem;
+  text-align: left;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #999;
+}
+
+.SettingItems {
+  flex: 0 1 100%;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: flex-start;
+  padding-top: 3%;
+  padding-bottom: 5%;
+  font-size: large;
+}
+
+.SettingItemText{
+  flex: 0 0 auto;
+}
+
+.SettingName{
+  margin: 5px 0px ;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.SettingInput{
+  flex: 1 1 auto;
+  min-width: 0px;
+  border: none;
+  margin-left: 3px;
+  border-bottom: 1px solid #aaaaaa;
+  box-shadow: none;
+  border-radius: 0px;
+  font-size: large;
+  padding: 2px;
+  outline: none;
+}
+
+.SettingInput:active{
+  -webkit-tap-highlight-color: transparent;
+}
+
+.SettingAffiliation{
+  margin: 5px 0px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.SettingMenu{
+  flex: 1 1 70%;
+  font-size: large;
+  border: none;
+  border-bottom: 1px solid #aaaaaa;
+  border-radius: 0px;
+  outline-width: 0px;
+  appearance: none;
+  padding-top: 2px;
+  padding-left: 5px;
+  background: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ljk1IDEwIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZjt9LmNscy0ye2ZpbGw6IzQ0NDt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmFycm93czwvdGl0bGU+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNC45NSIgaGVpZ2h0PSIxMCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSIxLjQxIDQuNjcgMi40OCAzLjE4IDMuNTQgNC42NyAxLjQxIDQuNjciLz48cG9seWdvbiBjbGFzcz0iY2xzLTIiIHBvaW50cz0iMy41NCA1LjMzIDIuNDggNi44MiAxLjQxIDUuMzMgMy41NCA1LjMzIi8+PC9zdmc+) no-repeat 95% 50%;
+}
+
+.SettingMenu:active{
+  -webkit-tap-highlight-color: transparent;
+}
+
+.SettingGrade{
+  margin: 5px 0px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.SettingKey{
+  margin: 5px 0px ;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.SettingPopupCloseButton{
+  flex: 0 0 2.5rem;
+  margin-top: auto;
+  width: 70%;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 4px;
+  padding: 6px;
+  background-color: #0000ff;
+  color: #fff;
+  transition: 0.2s ease-out;
+  box-shadow: 0px 2px 4px #888;
+  font-size: 1rem;
+  font-weight: bold;
+  outline: none;
+}
