@@ -34,7 +34,6 @@ class RecentCard extends Component {
       mode: "cors", // no-cors, cors, *same-origin
       headers: {
         "Content-Type": "text/plain",
-        // "Content-Type": "application/x-www-form-urlencoded",
       },
       body: JSON.stringify(data),
     })

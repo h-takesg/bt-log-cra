@@ -81,7 +81,6 @@
     if (hc.scrollTop === 0) hc.scrollTop = 1;
     if (event.target.closest(".HistoryCard") !== null && hc.scrollTop !== 0 && hc.scrollTop + hc.clientHeight !== hc.scrollHeight) {
       event.stopPropagation();
-      console.log(hc.scrollTop);
     }
     else {
       event.preventDefault();
