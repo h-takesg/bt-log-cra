@@ -46,7 +46,7 @@ class App extends Component {
       let newAffiliation = data["affiliation"];
       let newGrade = data["grade"];
       let newKey = data["key"];
-      console.log(newName + newAffiliation + newGrade);
+
       let errorText = "";
       if (newName === "") errorText += "名前を入力してください\n";
       if (newAffiliation === "選択") errorText += "所属を選択してください\n";
@@ -56,6 +56,7 @@ class App extends Component {
         alert(errorText);
         return;
       }
+
       this.setState({
         userName: newName,
         userAffiliation: newAffiliation,
@@ -75,20 +76,22 @@ class App extends Component {
   }
 
   submitHandler(data) {
-    var submitData = {};
-    submitData["key"] = this.state.apiKey;
-    submitData["method"] = "submit";
-    submitData["name"] = this.state.userName;
-    submitData["affiliation"] = this.state.userAffiliation;
-    submitData["grade"] = this.state.userGrade;
-    submitData["date"] = data["date"];
-    submitData["temperature"] = data["temperature"];
-    submitData["condition"] = data["condition"];
-    submitData["other"] = data["other"];
+    var submitData = {
+      key: this.state.apiKey,
+      method: "submit",
+      name: this.state.userName,
+      affiliation: this.state.userAffiliation,
+      grade: this.state.userGrade,
+      date: data["date"],
+      temperature: data["temperature"],
+      condition: data["condition"],
+      other: data["other"],
+    };
     this.postData("https://script.google.com/macros/s/AKfycbzCrDvj9iLbnFXbES5MXAQ5KH3w_LROAbUYtZNJEm1ZugpALQSd/exec", submitData);
     this.recentCardRef.current.setState({
       loading: true,
     });
+
     var newHistoryArray = this.state.historyArray.slice();
     newHistoryArray.push([Moment(data["data"]).format("M/D"), data["temperature"], data["condition"], Moment().format("YYYY/MM/DD HH:mm:ss")]);
     this.setState({
