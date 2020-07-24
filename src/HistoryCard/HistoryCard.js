@@ -54,7 +54,7 @@ class HistoryCard extends Component {
   render() {
     return (
       <div className="HistoryCard" ref={(divElement) => this.divElement = divElement}>
-        {this.props.historyArray.reverse().map(data => this.generateHistory(data))}
+        {this.props.historyArray.slice().reverse().map(data => this.generateHistory(data))}
         {this.generateSpace()}
       </div>
     )

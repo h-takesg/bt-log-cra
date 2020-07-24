@@ -89,7 +89,7 @@ class App extends Component {
     this.recentCardRef.current.setState({
       loading: true,
     });
-    var newHistoryArray = this.state.historyArray;
+    var newHistoryArray = this.state.historyArray.slice();
     newHistoryArray.push([Moment(data["data"]).format("M/D"), data["temperature"], data["condition"], Moment().format("YYYY/MM/DD HH:mm:ss")]);
     this.setState({
       submitPopup: false,
