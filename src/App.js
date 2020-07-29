@@ -36,7 +36,7 @@ class App extends Component {
   }
 
   updateHandler() {
-    var sendData = {
+    let sendData = {
       key: this.state.apiKey,
       name: this.state.userName,
       affiliation: this.state.userAffiliation,
@@ -50,26 +50,30 @@ class App extends Component {
     this.postData(sendData)
       .then((response) => response.json())
       .then((responseJson) => {
-        this.registerRecentData(responseJson["data"]);
-        //エラーハンドリング
+        console.log(responseJson);
+        if (responseJson["status"] === "SUCCESS")
+          this.registerRecentData(responseJson["data"]);
+        else if (responseJson["status"] === "VERIFY_FAILED")
+          alert("取得失敗\n設定項目を正しく入力しているか確認してください")
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
+        alert("サーバーが不調です\n1分ほど開けてからリトライしてください");
+      }).finally(() => {
         this.setState({
           recentLoading: false
         });
-        alert("取得失敗\n設定項目を正しく入力しているか確認してください");
       });
   }
 
   registerRecentData(responseArray) {
-    var newData = [];
-    var now = Moment().add(-6, 'days');
+    console.log(responseArray);
+    let newData = [];
+    let now = Moment().add(-6, 'days');
     for (let i = 0; i < 6; i++) {
       newData.push([now.add(1, 'days').format("M/DD"), (responseArray[i] ? "O" : "X")]);
     }
     this.setState({
-      recentLoading: false,
       recentArray: newData,
     });
     console.log("fetch done");
@@ -121,11 +125,27 @@ class App extends Component {
       other: data["other"],
     };
 
+    this.setState({
+      recentLoading: true,
+    });
     this.postData(submitData)
       .then((response) => response.json())
       .then((responseJson) => {
-        // TODO: レスポンス対応を書け
+        if (responseJson["status"] === "SUCCESS") {
+          let newRecentData = responseJson["data"];
+          newRecentData[newRecentData.length - 1] = "○";
+          this.registerRecentData(newRecentData);
+        } else if (responseJson["status"] === "VERIFY_FAILED" || responseJson["status"] === "SUBMIT FAILED") {
+          alert("送信失敗\n設定項目を正しく入力しているか確認してください")
+        } else {
+          alert("不明なエラー");
+        }
+      }).catch(e => {
+        alert("サーバーエラー\n送信成功を判断できませんでした\n10秒以上あけてから入力内容を確認し、未送信であれば再度送信してください");
       });
+    this.setState({
+      recentLoading: false,
+    })
 
     var newHistoryArray = this.state.historyArray.slice();
     newHistoryArray.push([Moment(data["data"]).format("M/D"), data["temperature"], data["condition"], Moment().format("YYYY/MM/DD HH:mm:ss")]);
@@ -137,14 +157,18 @@ class App extends Component {
   }
 
   postData(data = {}) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => { controller.abort() }, 8000);
+
     return fetch("https://script.google.com/macros/s/AKfycbzCrDvj9iLbnFXbES5MXAQ5KH3w_LROAbUYtZNJEm1ZugpALQSd/exec", {
+      signal: controller.signal,
       method: 'POST',
       mode: "cors",
       headers: {
         "Content-Type": "text/plain",
       },
       body: JSON.stringify(data),
-    });
+    }).then(e => { clearTimeout(timeout); return e });
   }
 
   componentDidMount() {
@@ -170,6 +194,7 @@ class App extends Component {
           })
         }
       })
+
     localforage.getItem("recent")
       .then((value) => {
         if (value !== null) {
