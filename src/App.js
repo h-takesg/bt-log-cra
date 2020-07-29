@@ -16,8 +16,8 @@ class App extends Component {
     this.submitPopupHandler = this.submitPopupHandler.bind(this);
     this.settingBtnHandler = this.settingBtnHandler.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
+    this.updateHandler = this.updateHandler.bind(this);
 
-    this.recentCardRef = React.createRef();
     this.settingPopupRef = React.createRef();
 
     this.state = {
@@ -29,8 +29,51 @@ class App extends Component {
       userGrade: "選択",
       apiKey: "",
       submitDate: Moment(),
+      recentArray: [["-/-", "-"], ["-/-", "-"], ["-/-", "-"], ["-/-", "-"], ["-/-", "-"], ["-/-", "-"]],
+      recentLoading: false,
     }
     localforage.config();
+  }
+
+  updateHandler() {
+    var sendData = {
+      key: this.state.apiKey,
+      name: this.state.userName,
+      affiliation: this.state.userAffiliation,
+      grade: this.state.userGrade,
+      method: "update",
+    };
+    this.setState({
+      recentLoading: true,
+    })
+    console.log("fetch start");
+    this.postData(sendData)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.registerRecentData(responseJson["data"]);
+        //エラーハンドリング
+      })
+      .catch((error) => {
+        console.error(error);
+        this.setState({
+          recentLoading: false
+        });
+        alert("取得失敗\n設定項目を正しく入力しているか確認してください");
+      });
+  }
+
+  registerRecentData(responseArray) {
+    var newData = [];
+    var now = Moment().add(-6, 'days');
+    for (let i = 0; i < 6; i++) {
+      newData.push([now.add(1, 'days').format("M/DD"), (responseArray[i] ? "O" : "X")]);
+    }
+    this.setState({
+      recentLoading: false,
+      recentArray: newData,
+    });
+    console.log("fetch done");
+    localforage.setItem("recent", newData);
   }
 
   submitPopupHandler() {
@@ -42,20 +85,10 @@ class App extends Component {
 
   settingBtnHandler(data) {
     if (this.state.settingPopup) {
-      let newName = data["name"];
-      let newAffiliation = data["affiliation"];
-      let newGrade = data["grade"];
-      let newKey = data["key"];
-
-      let errorText = "";
-      if (newName === "") errorText += "名前を入力してください\n";
-      if (newAffiliation === "選択") errorText += "所属を選択してください\n";
-      if (newGrade === "選択") errorText += "学年を選択してください\n";
-      if (newKey === "") errorText += "APIKeyを入力してください"
-      if (errorText !== "") {
-        alert(errorText);
-        return;
-      }
+      const newName = data["name"];
+      const newAffiliation = data["affiliation"];
+      const newGrade = data["grade"];
+      const newKey = data["key"];
 
       this.setState({
         userName: newName,
@@ -76,7 +109,7 @@ class App extends Component {
   }
 
   submitHandler(data) {
-    var submitData = {
+    const submitData = {
       key: this.state.apiKey,
       method: "submit",
       name: this.state.userName,
@@ -87,10 +120,12 @@ class App extends Component {
       condition: data["condition"],
       other: data["other"],
     };
-    this.postData("https://script.google.com/macros/s/AKfycbzCrDvj9iLbnFXbES5MXAQ5KH3w_LROAbUYtZNJEm1ZugpALQSd/exec", submitData);
-    this.recentCardRef.current.setState({
-      loading: true,
-    });
+
+    this.postData(submitData)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        // TODO: レスポンス対応を書け
+      });
 
     var newHistoryArray = this.state.historyArray.slice();
     newHistoryArray.push([Moment(data["data"]).format("M/D"), data["temperature"], data["condition"], Moment().format("YYYY/MM/DD HH:mm:ss")]);
@@ -101,38 +136,15 @@ class App extends Component {
     localforage.setItem("history", newHistoryArray);
   }
 
-  postData(url = ``, data = {}) {
-    return fetch(url, {
-      method: "POST",
+  postData(data = {}) {
+    return fetch("https://script.google.com/macros/s/AKfycbzCrDvj9iLbnFXbES5MXAQ5KH3w_LROAbUYtZNJEm1ZugpALQSd/exec", {
+      method: 'POST',
       mode: "cors",
       headers: {
         "Content-Type": "text/plain",
       },
       body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log("generate data");
-        var responseArray = responseJson["data"];
-        var newData = [];
-        var now = Moment().add(-6, 'days');
-        for (let i = 0; i < 6; i++) {
-          newData.push([now.add(1, 'days').format("M/DD"), (responseArray[i] ? "O" : "X")]);
-        }
-        this.recentCardRef.current.setState({
-          loading: false,
-          data: newData,
-        });
-        localforage.setItem("recent", newData);
-        console.log("fetch done");
-      })
-      .catch((error) => {
-        console.error(error);
-        this.recentCardRef.current.setState({
-          loading: false
-        });
-        alert("取得失敗\n設定項目を正しく入力しているか確認してください");
-      });
+    });
   }
 
   componentDidMount() {
@@ -161,8 +173,8 @@ class App extends Component {
     localforage.getItem("recent")
       .then((value) => {
         if (value !== null) {
-          this.recentCardRef.current.setState({
-            data: value
+          this.setState({
+            recentArray: value
           })
         }
       })
@@ -194,7 +206,10 @@ class App extends Component {
           userAffiliation={this.state.userAffiliation}
           userGrade={this.state.userGrade}
           apiKey={this.state.apiKey}
-          ref={this.recentCardRef} />
+          updateHandler={this.updateHandler}
+          recentLoading={this.state.recentLoading}
+          recentArray={this.state.recentArray}
+        />
         <HistoryCard historyArray={this.state.historyArray} />
         <button className="submitPopupButton" onClick={this.submitPopupHandler}>新規回答を送信</button>
         <SettingPopup displayState={this.state.settingPopup}
@@ -202,7 +217,8 @@ class App extends Component {
           userName={this.state.userName}
           userAffiliation={this.state.userAffiliation}
           userGrade={this.state.userGrade}
-          apiKey={this.state.apiKey} ref={this.settingPopupRef} />
+          apiKey={this.state.apiKey}
+          ref={this.settingPopupRef} />
         <SubmitPopup displayState={this.state.submitPopup}
           userName={this.state.userName}
           userAffiliation={this.state.userAffiliation}

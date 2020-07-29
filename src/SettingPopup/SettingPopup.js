@@ -43,16 +43,25 @@ class SettingPopup extends Component {
   }
 
   closeHandler() {
-    let data = {}
-    data["name"] = String(this.state.inputName).replace(" ", "").replace("　", "");
-    data["affiliation"] = this.state.inputAffiliation;
-    data["grade"] = this.state.inputGrade;
-    data["key"] = this.state.inputKey;
+    let data = {
+      name: String(this.state.inputName).replace(" ", "").replace("　", ""),
+      affiliation: this.state.inputAffiliation,
+      grade: this.state.inputGrade,
+      key: this.state.inputKey,
+    }
     console.log(data);
+
+    let errorText = "";
+    if (data["name"] === "") errorText += "名前を入力してください\n";
+    if (data["affiliation"] === "選択") errorText += "所属を選択してください\n";
+    if (data["grade"] === "選択") errorText += "学年を選択してください\n";
+    if (data["key"] === "") errorText += "APIKeyを入力してください"
+    if (errorText !== "") {
+      alert(errorText);
+      return;
+    }
+
     this.props.closeHandler(data);
-    this.setState({
-      inputName: data["name"],
-    })
   }
 
   render() {
