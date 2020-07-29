@@ -127,6 +127,7 @@ class App extends Component {
 
     this.setState({
       recentLoading: true,
+      submitPopup: false,
     });
     this.postData(submitData)
       .then((response) => response.json())
@@ -135,6 +136,14 @@ class App extends Component {
           let newRecentData = responseJson["data"];
           newRecentData[newRecentData.length - 1] = "○";
           this.registerRecentData(newRecentData);
+
+          let newHistoryArray = this.state.historyArray.slice();
+          newHistoryArray.push([Moment(data["data"]).format("M/D"), data["temperature"], data["condition"], Moment().format("YYYY/MM/DD HH:mm:ss")]);
+          this.setState({
+            historyArray: newHistoryArray,
+          });
+          localforage.setItem("history", newHistoryArray);
+
         } else if (responseJson["status"] === "VERIFY_FAILED" || responseJson["status"] === "SUBMIT FAILED") {
           alert("送信失敗\n設定項目を正しく入力しているか確認してください")
         } else {
@@ -142,18 +151,11 @@ class App extends Component {
         }
       }).catch(e => {
         alert("サーバーエラー\n送信成功を判断できませんでした\n10秒以上あけてから入力内容を確認し、未送信であれば再度送信してください");
+      }).finally(e => {
+        this.setState({
+          recentLoading: false,
+        })
       });
-    this.setState({
-      recentLoading: false,
-    })
-
-    var newHistoryArray = this.state.historyArray.slice();
-    newHistoryArray.push([Moment(data["data"]).format("M/D"), data["temperature"], data["condition"], Moment().format("YYYY/MM/DD HH:mm:ss")]);
-    this.setState({
-      submitPopup: false,
-      historyArray: newHistoryArray,
-    });
-    localforage.setItem("history", newHistoryArray);
   }
 
   postData(data = {}) {
