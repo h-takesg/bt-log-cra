@@ -25,3 +25,4 @@ yarn-error.log*
 # add
 indexeddbDebugging.md
 /.firebase
+/androidstudio

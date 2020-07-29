@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import Intro from './Intro/Intro';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {(window.matchMedia('(display-mode: standalone)').matches) ? <App /> : <Intro />}
   </React.StrictMode>,
   document.getElementById('root')
 );

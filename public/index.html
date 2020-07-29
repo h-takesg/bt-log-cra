@@ -73,28 +73,5 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 </body>
-<script>
-  var hc = document.getElementsByClassName("HistoryCard")[0];
-  hc.scrollTop = 1;
-
-  window.addEventListener('touchmove', function (event) {
-    if (hc.scrollTop === 0) hc.scrollTop = 1;
-    if (event.target.closest(".HistoryCard") !== null && hc.scrollTop !== 0 && hc.scrollTop + hc.clientHeight !== hc.scrollHeight) {
-      event.stopPropagation();
-    }
-    else {
-      event.preventDefault();
-    }
-  }, { passive: false });
-
-  hc.addEventListener('scroll', function (event) {
-    if (hc.scrollTop === 0) {
-      hc.scrollTop = 1;
-    }
-    else if (hc.scrollTop + hc.clientHeight === hc.scrollHeight) {
-      hc.scrollTop = hc.scrollTop - 1;
-    }
-  });
-</script>
 
 </html>
