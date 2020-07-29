@@ -210,7 +210,8 @@ class App extends Component {
         if (value !== null) {
           this.setState({
             recentArray: value
-          })
+          });
+          this.updateHandler();
         }
       })
     localforage.getItem("history")
@@ -220,7 +221,7 @@ class App extends Component {
             historyArray: value
           })
         }
-      })
+      });
   }
 
   render() {
