@@ -73,6 +73,14 @@ class App extends Component {
     for (let i = 0; i < 6; i++) {
       newData.push([now.add(1, 'days').format("M/DD"), (responseArray[i] ? "O" : "X")]);
     }
+
+    // 特殊処理
+    // 本日分を送信後10秒以内に更新すると未送信になるため、これを防ぐ
+    if (this.state.recentArray[this.state.recentArray.length - 1][0] === newData[newData.length - 1][0]
+      && this.state.recentArray[this.state.recentArray.length - 1][1] === "O") {
+      newData[newData.length - 1][1] = "O";
+    }
+
     this.setState({
       recentArray: newData,
     });
@@ -144,13 +152,13 @@ class App extends Component {
           });
           localforage.setItem("history", newHistoryArray);
 
-        } else if (responseJson["status"] === "VERIFY_FAILED" || responseJson["status"] === "SUBMIT FAILED") {
+        } else if (responseJson["status"] === "VERIFY_FAILED" || responseJson["status"] === "SUBMIT_FAILED") {
           alert("送信失敗\n設定項目を正しく入力しているか確認してください")
         } else {
           alert("不明なエラー");
         }
       }).catch(e => {
-        alert("サーバーエラー\n送信成功を判断できませんでした\n10秒以上あけてから入力内容を確認し、未送信であれば再度送信してください");
+        alert("サーバーエラー\n送信成功か判断できませんでした\n10秒以上あけてから入力内容を確認し、未送信であれば再度送信してください");
       }).finally(e => {
         this.setState({
           recentLoading: false,
