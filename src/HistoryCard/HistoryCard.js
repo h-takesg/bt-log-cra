@@ -58,7 +58,6 @@ class HistoryCard extends Component {
 
     window.addEventListener('touchmove', function (event) {
       this.hc = document.getElementsByClassName("HistoryCard")[0];
-      this.hc.scrollTop = 1;
       if (this.hc.scrollTop === 0) this.hc.scrollTop = 1;
       if (event.target.closest(".HistoryCard") !== null && this.hc.scrollTop !== 0 && this.hc.scrollTop + this.hc.clientHeight !== this.hc.scrollHeight) {
         event.stopPropagation();
