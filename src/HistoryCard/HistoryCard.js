@@ -9,8 +9,6 @@ class HistoryCard extends Component {
       componentSpaceHeight: 0,
       scrollTop: 0
     }
-
-    this.hc = React.createRef();
   }
 
   generateHistory(data) {
@@ -51,31 +49,6 @@ class HistoryCard extends Component {
       componentHeight: this.divElement.clientHeight,
       componentSpaceHeight: this.spaceElement.clientHeight
     })
-
-    this.hc = document.getElementsByClassName("HistoryCard")[0];
-    this.hc.scrollTop = 1;
-
-
-    window.addEventListener('touchmove', function (event) {
-      this.hc = document.getElementsByClassName("HistoryCard")[0];
-      if (this.hc.scrollTop === 0) this.hc.scrollTop = 1;
-      if (event.target.closest(".HistoryCard") !== null && this.hc.scrollTop !== 0 && this.hc.scrollTop + this.hc.clientHeight !== this.hc.scrollHeight) {
-        event.stopPropagation();
-      }
-      else {
-        event.preventDefault();
-      }
-    }, { passive: false });
-
-    this.hc.addEventListener('scroll', function (event) {
-      this.hc = document.getElementsByClassName("HistoryCard")[0];
-      if (this.hc.scrollTop === 0) {
-        this.hc.scrollTop = 1;
-      }
-      else if (this.hc.scrollTop + this.hc.clientHeight === this.hc.scrollHeight) {
-        this.hc.scrollTop = this.hc.scrollTop - 1;
-      }
-    });
   }
 
   render() {
